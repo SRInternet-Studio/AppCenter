@@ -1,25 +1,85 @@
 body {
-    font-family: sans-serif;
-    margin: 20px;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #357EDD;
 }
 
 .options {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+label {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #357EDD;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #285BB5;
 }
 
 #releaseList {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-top: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .release-item {
-    margin-bottom: 10px;
-    padding: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
     border: 1px solid #eee;
+    border-radius: 5px;
+    background: #f9f9f9;
+    transition: all 0.3s;
+}
+
+.release-item:hover {
+    background: #f1f1f1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.release-item h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.release-item p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555;
 }
 
 .release-item a {
     display: block;
-    margin-top: 5px;
+    margin-top: 10px;
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.release-item a:hover {
+    color: #0056b3;
 }
