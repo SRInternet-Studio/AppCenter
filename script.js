@@ -17,6 +17,8 @@ const proxies = [
 
 let useProxy = false;
 let bestProxy = null;
+let converter = new showdown.Converter(); // 创建Showdown转换器
+let cache = {}; // 简单的缓存对象
 
 // 测试镜像站的响应时间
 async function pingProxy(proxy) {
@@ -48,6 +50,12 @@ function convertToProxyLinks(url) {
 }
 
 async function fetchReleases(repo) {
+    // 检查缓存
+    if (cache[repo]) {
+        renderReleases(cache[repo]);
+        return;
+    }
+
     try {
         releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>';
         const apiUrl = `https://api.github.com/repos/${repo}/releases`;
@@ -69,35 +77,42 @@ async function fetchReleases(repo) {
             return;
         }
 
-        releaseListDiv.innerHTML = ''; // 清空加载提示
-        releases.forEach(release => {
-            const releaseItemDiv = document.createElement('div');
-            releaseItemDiv.classList.add('release-item');
-            
-            const releaseTitle = document.createElement('h2');
-            releaseTitle.textContent = release.name || release.tag_name; // 使用 name 或 tag_name
-            releaseItemDiv.appendChild(releaseTitle);
-            
-            const releaseBody = document.createElement('p');
-            releaseBody.innerHTML = release.body;
-            releaseItemDiv.appendChild(releaseBody);
-            
-            release.assets.forEach(asset => {
-                const assetLink = document.createElement('a');
-                assetLink.href = convertToProxyLinks(asset.browser_download_url);
-                assetLink.target = "_blank";
-                assetLink.rel = "noopener noreferrer";
-                assetLink.textContent = `下载: ${asset.name}`;
-                releaseItemDiv.appendChild(assetLink);
-            });
+        // 存储到缓存
+        cache[repo] = releases;
 
-            releaseListDiv.appendChild(releaseItemDiv);
-        });
+        renderReleases(releases);
 
     } catch (error) {
         console.error("获取 release 列表失败:", error);
         releaseListDiv.innerHTML = `<p>获取 Release 列表失败: ${error.message}</p>`;
     }
+}
+
+function renderReleases(releases) {
+    releaseListDiv.innerHTML = ''; // 清空加载提示
+    releases.forEach(release => {
+        const releaseItemDiv = document.createElement('div');
+        releaseItemDiv.classList.add('release-item');
+        
+        const releaseTitle = document.createElement('h2');
+        releaseTitle.textContent = release.name || release.tag_name; // 使用 name 或 tag_name
+        releaseItemDiv.appendChild(releaseTitle);
+        
+        const releaseBody = document.createElement('p');
+        releaseBody.innerHTML = converter.makeHtml(release.body); // 使用Showdown将Markdown转换为HTML
+        releaseItemDiv.appendChild(releaseBody);
+        
+        release.assets.forEach(asset => {
+            const assetLink = document.createElement('a');
+            assetLink.href = convertToProxyLinks(asset.browser_download_url);
+            assetLink.target = "_blank";
+            assetLink.rel = "noopener noreferrer";
+            assetLink.textContent = `下载: ${asset.name}`;
+            releaseItemDiv.appendChild(assetLink);
+        });
+
+        releaseListDiv.appendChild(releaseItemDiv);
+    });
 }
 
 function handleRepoChange() {

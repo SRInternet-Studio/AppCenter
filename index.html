@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SR思锐 产品发布页</title>
+    <title>GitHub Releases</title>
     <link rel="stylesheet" href="style.css"> <!-- 假设你有一个外部CSS -->
+    <script src="showdown.js"></script> <!-- 引入Showdown -->
 </head>
 <body>
     <div class="container">
-        <h1>SR思锐 产品发布页</h1>
+        <h1>SR GitHub Releases</h1>
         <div class="options">
             <label for="repoSelect">选择仓库:</label>
             <select id="repoSelect">
@@ -18,7 +19,7 @@
                 <option value="SRInternet-Studio/Class_Hot_Search">班级热搜排行榜</option>
             </select>
             <label>
-                <input type="checkbox" id="useProxy"> 使用最优代理 (GitHub 镜像站)
+                <input type="checkbox" id="useProxy"> 使用代理 (GitHub 镜像站)
             </label>
             <button id="refreshButton">刷新列表</button>
         </div>
