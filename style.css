@@ -1,0 +1,25 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+}
+
+.options {
+    margin-bottom: 10px;
+}
+
+#releaseList {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.release-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+}
+
+.release-item a {
+    display: block;
+    margin-top: 5px;
+}
