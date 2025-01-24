@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Releases</title>
+    <title>SR思锐 产品发布页</title>
     <link rel="stylesheet" href="style.css"> <!-- 假设你有一个外部CSS -->
     <script src="showdown.js"></script> <!-- 引入Showdown -->
 </head>
 <body>
     <div class="container">
-        <h1>SR GitHub Releases</h1>
+        <h1>SR思锐 产品发布页</h1>
         <div class="options">
             <label for="repoSelect">选择仓库:</label>
             <select id="repoSelect">
@@ -25,9 +25,12 @@
         </div>
 
         <div id="releaseList">
-            <p>正在加载 Release 列表...</p>
+            <div id="loadingAnimation" style="display: none;">
+                <p>正在加载 Release 列表...</p>
+                <div class="loader"></div> <!-- 加载动画 -->
+            </div>
+            <p id="releaseMessage">...</p>
         </div>
-    </div>
 
     <script src="script.js"></script> <!-- 引入外部JavaScript文件 -->
 </body>

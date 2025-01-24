@@ -134,3 +134,24 @@ useProxyCheckbox.addEventListener('change', handleProxyChange);
 
 // 刷新按钮事件
 refreshButton.addEventListener('click', handleRepoChange);
+document.getElementById('refreshButton').addEventListener('click', function() {
+    // 显示加载动画
+    document.getElementById('loadingAnimation').style.display = 'block';
+    document.getElementById('releaseMessage').style.display = 'none'; // 隐藏现有的 Release 信息
+
+    const selectedRepo = document.getElementById('repoSelect').value;
+    const useProxy = document.getElementById('useProxy').checked;
+
+    // Simulated function to get releases from GitHub
+    getReleases(selectedRepo, useProxy)
+        .then(releases => {
+            // 处理 releases 数据...
+            document.getElementById('loadingAnimation').style.display = 'none'; // 隐藏加载动画
+            document.getElementById('releaseMessage').style.display = 'block'; // 显示 Release 信息
+        })
+        .catch(error => {
+            console.error('Error fetching releases:', error);
+            document.getElementById('loadingAnimation').style.display = 'none'; // 隐藏加载动画
+            // 处理错误...
+        });
+});
