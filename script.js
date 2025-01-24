@@ -3,30 +3,46 @@ const releaseListDiv = document.getElementById('releaseList');
 const refreshButton = document.getElementById('refreshButton');
 const repoSelect = document.getElementById('repoSelect');
 
-const proxyDomains = {
-    original: {
-        site: 'github.com',
-        raw: 'raw.githubusercontent.com',
-        release: 'github.com',
-        git: 'github.com'
-    },
-    proxy: {
-        site: 'github.site', // 镜像站域名
-        raw: 'raw.github.site',
-        release: 'github.store',
-        git: 'github.store'
-    }
-};
+const proxies = [
+    'https://gh.zhaojun.im',
+    'https://ghproxy.cc',
+    'https://github.7boe.top',
+    'https://gitproxy.mrhjx.cn',
+    'https://ghproxy.cn',
+    'https://mirrors.chenby.cn',
+    'https://github.tbedu.top',
+    'https://gh.xx9527.cn',
+    'https://fastgit.cc'
+];
 
 let useProxy = false;
+let bestProxy = null;
+
+// 测试镜像站的响应时间
+async function pingProxy(proxy) {
+    const startTime = performance.now();
+    try {
+        await fetch(proxy, { method: 'HEAD', mode: 'no-cors' });
+        const endTime = performance.now();
+        return endTime - startTime; // 返回响应时间
+    } catch (e) {
+        return Infinity; // 请求失败时返回一个很大的值
+    }
+}
+
+// 查找最优镜像站
+async function findBestProxy() {
+    const results = await Promise.all(proxies.map(pingProxy));
+    const bestIndex = results.indexOf(Math.min(...results)); // 找到响应时间最小的索引
+    bestProxy = proxies[bestIndex]; // 更新最优镜像
+    console.log(`最优镜像站: ${bestProxy}`);
+}
 
 // 将链接按需求替换为镜像链接
 function convertToProxyLinks(url) {
-    if (useProxy) {
-        url = url.replace(proxyDomains.original.site, proxyDomains.proxy.site);
-        url = url.replace(proxyDomains.original.raw, proxyDomains.proxy.raw);
-        url = url.replace(proxyDomains.original.release, proxyDomains.proxy.release);
-        url = url.replace(proxyDomains.original.git, proxyDomains.proxy.git);
+    if (useProxy && bestProxy) {
+        url = url.replace('github.com', bestProxy.replace('https://', ''));
+        url = url.replace('raw.githubusercontent.com', bestProxy.replace('https://', ''));
     }
     return url;
 }
@@ -35,6 +51,11 @@ async function fetchReleases(repo) {
     try {
         releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>';
         const apiUrl = `https://api.github.com/repos/${repo}/releases`;
+
+        // 如果选择使用代理，先找到最佳镜像
+        if (useProxy) {
+            await findBestProxy();
+        }
 
         const response = await fetch(apiUrl);
         if (!response.ok) {

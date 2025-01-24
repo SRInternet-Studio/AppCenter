@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GitHub Releases</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> <!-- 假设你有一个外部CSS -->
 </head>
 <body>
     <div class="container">
-    <h1>SR GitHub Releases</h1>
-    <div class="options">
-        <label for="repoSelect">选择仓库:</label>
-        <select id="repoSelect">
-            <option value="SRInternet-Studio/PapaAI-Releases">PapaAI</option>
-            <option value="SRInternet-Studio/Wallpaper-generator">壁纸生成器</option>
-            <option value="SRInternet-Studio/Seewo-Custom_Start">希沃定制启动器</option>
-            <option value="SRInternet-Studio/Seewo-Custom_Start">班级热搜排行榜</option>
+        <h1>SR GitHub Releases</h1>
+        <div class="options">
+            <label for="repoSelect">选择仓库:</label>
+            <select id="repoSelect">
+                <option value="SRInternet-Studio/PapaAI-Releases">PapaAI</option>
+                <option value="SRInternet-Studio/Wallpaper-generator">壁纸生成器</option>
+                <option value="SRInternet-Studio/Seewo-Custom_Start">希沃定制启动器</option>
+                <option value="SRInternet-Studio/Class-Search-Rank">班级热搜排行榜</option>
+            </select>
+            <label>
+                <input type="checkbox" id="useProxy"> 使用最优代理 (GitHub 镜像站)
+            </label>
+            <button id="refreshButton">刷新列表</button>
+        </div>
 
-        </select>
-        <label>
-            <input type="checkbox" id="useProxy"> 使用代理 (GitHub 镜像站)
-        </label>
-        <button id="refreshButton">刷新列表</button>
+        <div id="releaseList">
+            <p>正在加载 Release 列表...</p>
+        </div>
     </div>
 
-    <div id="releaseList">
-        <p>正在加载 Release 列表...</p>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="script.js"></script> <!-- 引入外部JavaScript文件 -->
 </body>
 </html>
