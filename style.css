@@ -83,3 +83,40 @@ button:hover {
 .release-item a:hover {
     color: #0056b3;
 }
+/* 下拉框样式 */
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    margin-right: 10px;
+    transition: border-color 0.3s;
+    -webkit-appearance: none;  /* 去掉默认样式的下拉箭头 */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'); /* 自定义下拉箭头 */
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px;
+}
+
+select:focus {
+    border-color: #357EDD;
+    outline: none;
+}
+
+/* 选项样式 */
+option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* 美化标签 */
+label {
+    font-size: 18px;
+    margin-right: 10px;
+    color: #333;
+}

@@ -1,7 +1,8 @@
 const useProxyCheckbox = document.getElementById('useProxy');
 const releaseListDiv = document.getElementById('releaseList');
 const refreshButton = document.getElementById('refreshButton');
-const githubRepo = 'SRInternet-Studio/PapaAI-Releases'; // 请替换为你的用户名和仓库名
+const repoSelect = document.getElementById('repoSelect');
+
 const proxyDomains = {
     original: {
         site: 'github.com',
@@ -22,26 +23,22 @@ let useProxy = false;
 // 将链接按需求替换为镜像链接
 function convertToProxyLinks(url) {
     if (useProxy) {
-        // 替换网站链接
         url = url.replace(proxyDomains.original.site, proxyDomains.proxy.site);
-        // 替换 Raw 链接
         url = url.replace(proxyDomains.original.raw, proxyDomains.proxy.raw);
-        // 替换 Release 链接
         url = url.replace(proxyDomains.original.release, proxyDomains.proxy.release);
-        // 替换 Git Clone 链接
         url = url.replace(proxyDomains.original.git, proxyDomains.proxy.git);
     }
     return url;
 }
 
-async function fetchReleases() {
+async function fetchReleases(repo) {
     try {
         releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>';
-        const apiUrl = `https://api.github.com/repos/${githubRepo}/releases`;
+        const apiUrl = `https://api.github.com/repos/${repo}/releases`;
 
         const response = await fetch(apiUrl);
         if (!response.ok) {
-            throw new Error('无法获取 Release 列表, GitHub API 返回错误: ' + response.statusText);
+            throw new Error(`无法获取 Release 列表, GitHub API 返回错误: ${response.statusText}`);
         }
 
         const releases = await response.json();
@@ -82,16 +79,22 @@ async function fetchReleases() {
     }
 }
 
+function handleRepoChange() {
+    const selectedRepo = repoSelect.value;
+    fetchReleases(selectedRepo);
+}
+
 function handleProxyChange() {
     useProxy = useProxyCheckbox.checked;
-    fetchReleases();
+    handleRepoChange(); // 优化代码，直接刷新选择的仓库
 }
 
 // 初始加载
-fetchReleases();
+handleRepoChange(); // 加载默认选中的仓库
 
 // 监听切换
+repoSelect.addEventListener('change', handleRepoChange);
 useProxyCheckbox.addEventListener('change', handleProxyChange);
 
 // 刷新按钮事件
-refreshButton.addEventListener('click', handleProxyChange);
+refreshButton.addEventListener('click', handleRepoChange);
