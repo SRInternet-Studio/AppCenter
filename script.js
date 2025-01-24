@@ -6,7 +6,6 @@ const repoSelect = document.getElementById('repoSelect');
 const proxies = [
     'https://gh.zhaojun.im',
     'https://ghproxy.cc',
-    'https://github.7boe.top',
     'https://gitproxy.mrhjx.cn',
     'https://ghproxy.cn',
     'https://mirrors.chenby.cn',
@@ -17,7 +16,7 @@ const proxies = [
 
 let useProxy = false;
 let bestProxy = null;
-let converter = new showdown.Converter(); // 创建Showdown转换器
+let converter = new showdown.Converter();
 let cache = {}; // 简单的缓存对象
 
 // 测试镜像站的响应时间
@@ -26,9 +25,9 @@ async function pingProxy(proxy) {
     try {
         await fetch(proxy, { method: 'HEAD', mode: 'no-cors' });
         const endTime = performance.now();
-        return endTime - startTime; // 返回响应时间
+        return endTime - startTime;
     } catch (e) {
-        return Infinity; // 请求失败时返回一个很大的值
+        return Infinity;
     }
 }
 
@@ -36,34 +35,24 @@ async function pingProxy(proxy) {
 async function findBestProxy() {
     const results = await Promise.all(proxies.map(pingProxy));
     const bestIndex = results.indexOf(Math.min(...results)); // 找到响应时间最小的索引
-    bestProxy = proxies[bestIndex]; // 更新最优镜像
+    bestProxy = proxies[bestIndex];
     console.log(`最优镜像站: ${bestProxy}`);
 }
 
-// 将链接按需求替换为镜像链接
+// 将链接按需转换为代理链接
 function convertToProxyLinks(url) {
     if (useProxy && bestProxy) {
-        url = url.replace('github.com', bestProxy.replace('https://', ''));
-        url = url.replace('raw.githubusercontent.com', bestProxy.replace('https://', ''));
+        // 在代理链接的后面加上 GitHub 的 URL
+        url = `${bestProxy}/${url}`;
     }
     return url;
 }
 
+// 获取 Releases 列表
 async function fetchReleases(repo) {
-    // 检查缓存
-    if (cache[repo]) {
-        renderReleases(cache[repo]);
-        return;
-    }
-
+    releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>'; // 显示加载中
     try {
-        releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>';
         const apiUrl = `https://api.github.com/repos/${repo}/releases`;
-
-        // 如果选择使用代理，先找到最佳镜像
-        if (useProxy) {
-            await findBestProxy();
-        }
 
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -81,30 +70,30 @@ async function fetchReleases(repo) {
         cache[repo] = releases;
 
         renderReleases(releases);
-
     } catch (error) {
-        console.error("获取 release 列表失败:", error);
+        console.error("获取 Release 列表失败:", error);
         releaseListDiv.innerHTML = `<p>获取 Release 列表失败: ${error.message}</p>`;
     }
 }
 
+// 渲染 Releases 列表
 function renderReleases(releases) {
-    releaseListDiv.innerHTML = ''; // 清空加载提示
+    releaseListDiv.innerHTML = ''; // 清空现有内容
     releases.forEach(release => {
         const releaseItemDiv = document.createElement('div');
         releaseItemDiv.classList.add('release-item');
         
         const releaseTitle = document.createElement('h2');
-        releaseTitle.textContent = release.name || release.tag_name; // 使用 name 或 tag_name
+        releaseTitle.textContent = release.name || release.tag_name;
         releaseItemDiv.appendChild(releaseTitle);
         
         const releaseBody = document.createElement('p');
-        releaseBody.innerHTML = converter.makeHtml(release.body); // 使用Showdown将Markdown转换为HTML
+        releaseBody.innerHTML = converter.makeHtml(release.body);
         releaseItemDiv.appendChild(releaseBody);
         
         release.assets.forEach(asset => {
             const assetLink = document.createElement('a');
-            assetLink.href = convertToProxyLinks(asset.browser_download_url);
+            assetLink.href = convertToProxyLinks(asset.browser_download_url); // 转换链接到代理
             assetLink.target = "_blank";
             assetLink.rel = "noopener noreferrer";
             assetLink.textContent = `下载: ${asset.name}`;
@@ -115,14 +104,38 @@ function renderReleases(releases) {
     });
 }
 
+// 处理仓库选择变化
 function handleRepoChange() {
     const selectedRepo = repoSelect.value;
     fetchReleases(selectedRepo);
 }
 
-function handleProxyChange() {
+// 刷新列表事件
+async function handleRefreshClick() {
+    const selectedRepo = repoSelect.value;
     useProxy = useProxyCheckbox.checked;
-    handleRepoChange(); // 优化代码，直接刷新选择的仓库
+
+    // 刷新时，如果开启了代理，先选择最优代理
+    if (useProxy) {
+        await findBestProxy();
+    }
+    
+    fetchReleases(selectedRepo);
+}
+
+// 处理代理状态变化
+async function handleProxyChange() {
+    useProxy = useProxyCheckbox.checked; // 更新 useProxy 状态
+    const selectedRepo = repoSelect.value;
+
+    // 隐藏现有内容并更新为 “正在选择最优线路...”
+    releaseListDiv.innerHTML = '<p>正在选择最优线路...</p>'; 
+
+    if (useProxy) {
+        await findBestProxy(); // 查找最优代理
+    }
+
+    fetchReleases(selectedRepo); // 更新 Releases 列表
 }
 
 // 初始加载
@@ -132,5 +145,5 @@ handleRepoChange(); // 加载默认选中的仓库
 repoSelect.addEventListener('change', handleRepoChange);
 useProxyCheckbox.addEventListener('change', handleProxyChange);
 
-// 刷新按钮事件
-refreshButton.addEventListener('click', handleRepoChange);
+// 监听刷新按钮事件
+refreshButton.addEventListener('click', handleRefreshClick);
