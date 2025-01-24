@@ -7,14 +7,9 @@ const repoSelect = document.getElementById('repoSelect');
 const navigateDiv = document.getElementById('navigateDiv');
 
 const proxies = [
-    'https://gh.zhaojun.im',
-    'https://ghproxy.cc',
+    'https://gh.llkk.cc',
+    'https://ghproxy.net',
     'https://gitproxy.mrhjx.cn',
-    'https://ghproxy.cn',
-    'https://mirrors.chenby.cn',
-    'https://github.tbedu.top',
-    'https://gh.xx9527.cn',
-    'https://fastgit.cc'
 ];
 
 let useProxy = false;
