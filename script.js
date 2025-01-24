@@ -2,7 +2,7 @@ const useProxyCheckbox = document.getElementById('useProxy');
 const releaseListDiv = document.getElementById('releaseList');
 const refreshButton = document.getElementById('refreshButton');
 const githubRepo = 'SRInternet-Studio/PapaAI-Releases'; // 请替换为你的用户名和仓库名
-const githubProxy = 'https://ghproxy.com/'; // github 镜像站地址（举例）
+const githubProxy = 'https://github.site/'; // github 镜像站地址（举例）
 
 
 let useProxy = false;
