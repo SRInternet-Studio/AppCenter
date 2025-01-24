@@ -2,13 +2,16 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f4f4f9;
-    color: #333;
+    background-image: url('background.png'); /* 设置背景图片 */
+    background-size: cover; /* 让背景图片覆盖整个页面 */
+    background-position: center; /* 使背景图片居中 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+    color: #333; /* 文本颜色 */
 }
 
 h1 {
     text-align: center;
-    color: #357EDD;
+    color: #8A44D4; /* 头部颜色 */
 }
 
 .options {
@@ -19,13 +22,14 @@ h1 {
 label {
     font-size: 18px;
     margin-right: 10px;
+    color: #333; /* 标签颜色 */
 }
 
 button {
     padding: 10px 15px;
     font-size: 16px;
     color: white;
-    background-color: #357EDD;
+    background-color: #8A44D4; /* 按钮颜色 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -33,7 +37,7 @@ button {
 }
 
 button:hover {
-    background-color: #285BB5;
+    background-color: #9626eb; /* 鼠标悬停的颜色 */
 }
 
 #releaseList {
@@ -41,7 +45,7 @@ button:hover {
     margin: 0 auto;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9); /* 使用透明白色作为背景以便使内容可读 */
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -63,26 +67,27 @@ button:hover {
 .release-item h2 {
     margin: 0;
     font-size: 20px;
-    color: #333;
+    color: #333; /* Release 项目的标题颜色 */
 }
 
 .release-item p {
     font-size: 14px;
     line-height: 1.6;
-    color: #555;
+    color: #555; /* Release 项目的内容颜色 */
 }
 
 .release-item a {
     display: block;
     margin-top: 10px;
-    color: #007BFF;
+    color: #722bf2; /* 下载链接颜色 */
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .release-item a:hover {
-    color: #0056b3;
+    color: #9626eb; /* 当鼠标悬停下载链接颜色 */
 }
+
 /* 下拉框样式 */
 select {
     padding: 10px;
@@ -90,7 +95,7 @@ select {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #fff;
-    color: #333;
+    color: #333; /* 下拉框文本颜色 */
     margin-right: 10px;
     transition: border-color 0.3s;
     -webkit-appearance: none;  /* 去掉默认样式的下拉箭头 */
@@ -103,7 +108,7 @@ select {
 }
 
 select:focus {
-    border-color: #357EDD;
+    border-color: #8A44D4; /* 聚焦时边框颜色 */
     outline: none;
 }
 
@@ -111,12 +116,26 @@ select:focus {
 option {
     padding: 10px;
     background-color: #fff;
-    color: #333;
+    color: #333; /* 下拉选项颜色 */
 }
 
 /* 美化标签 */
 label {
     font-size: 18px;
     margin-right: 10px;
-    color: #333;
+    color: #333; /* 标签颜色 */
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px;
+    background-color: #8A44D4; /* 新的按钮颜色 */
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: #9626eb; /* 悬停时的新颜色 */
 }

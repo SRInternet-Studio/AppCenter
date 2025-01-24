@@ -3,6 +3,9 @@ const releaseListDiv = document.getElementById('releaseList');
 const refreshButton = document.getElementById('refreshButton');
 const repoSelect = document.getElementById('repoSelect');
 
+// 添加导航按钮的 DOM 元素
+const navigateDiv = document.getElementById('navigateDiv');
+
 const proxies = [
     'https://gh.zhaojun.im',
     'https://ghproxy.cc',
@@ -42,8 +45,7 @@ async function findBestProxy() {
 // 将链接按需转换为代理链接
 function convertToProxyLinks(url) {
     if (useProxy && bestProxy) {
-        // 在代理链接的后面加上 GitHub 的 URL
-        url = `${bestProxy}/${url}`;
+        return `${bestProxy}/${url}`;
     }
     return url;
 }
@@ -69,7 +71,7 @@ async function fetchReleases(repo) {
         // 存储到缓存
         cache[repo] = releases;
 
-        renderReleases(releases);
+        renderReleases(releases, repo);
     } catch (error) {
         console.error("获取 Release 列表失败:", error);
         releaseListDiv.innerHTML = `<p>获取 Release 列表失败: ${error.message}</p>`;
@@ -77,7 +79,7 @@ async function fetchReleases(repo) {
 }
 
 // 渲染 Releases 列表
-function renderReleases(releases) {
+function renderReleases(releases, repo) {
     releaseListDiv.innerHTML = ''; // 清空现有内容
     releases.forEach(release => {
         const releaseItemDiv = document.createElement('div');
@@ -93,7 +95,7 @@ function renderReleases(releases) {
         
         release.assets.forEach(asset => {
             const assetLink = document.createElement('a');
-            assetLink.href = convertToProxyLinks(asset.browser_download_url); // 转换链接到代理
+            assetLink.href = convertToProxyLinks(asset.browser_download_url);
             assetLink.target = "_blank";
             assetLink.rel = "noopener noreferrer";
             assetLink.textContent = `下载: ${asset.name}`;
@@ -102,6 +104,28 @@ function renderReleases(releases) {
 
         releaseListDiv.appendChild(releaseItemDiv);
     });
+
+    // 添加跳转到 Releases 和仓库的按钮
+    const repoLinkDiv = document.createElement('div');
+    const repoUrl = `https://github.com/${repo}`;
+    const releaseUrl = `${repoUrl}/releases`;
+    
+    const viewReleaseButton = document.createElement('a');
+    viewReleaseButton.href = releaseUrl;
+    viewReleaseButton.target = "_blank";
+    viewReleaseButton.innerText = "查看所有 Releases";
+    viewReleaseButton.classList.add('btn');
+    
+    const viewRepoButton = document.createElement('a');
+    viewRepoButton.href = repoUrl;
+    viewRepoButton.target = "_blank";
+    viewRepoButton.innerText = "查看仓库";
+    viewRepoButton.classList.add('btn');
+
+    repoLinkDiv.appendChild(viewReleaseButton);
+    repoLinkDiv.appendChild(viewRepoButton);
+    
+    releaseListDiv.appendChild(repoLinkDiv);
 }
 
 // 处理仓库选择变化
@@ -115,7 +139,6 @@ async function handleRefreshClick() {
     const selectedRepo = repoSelect.value;
     useProxy = useProxyCheckbox.checked;
 
-    // 刷新时，如果开启了代理，先选择最优代理
     if (useProxy) {
         await findBestProxy();
     }
@@ -128,7 +151,6 @@ async function handleProxyChange() {
     useProxy = useProxyCheckbox.checked; // 更新 useProxy 状态
     const selectedRepo = repoSelect.value;
 
-    // 隐藏现有内容并更新为 “正在选择最优线路...”
     releaseListDiv.innerHTML = '<p>正在选择最优线路...</p>'; 
 
     if (useProxy) {
