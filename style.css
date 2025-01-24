@@ -2,10 +2,7 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 20px;
-    background-image: url('background.png'); /* 设置背景图片 */
-    background-size: cover; /* 让背景图片覆盖整个页面 */
-    background-position: center; /* 使背景图片居中 */
-    background-repeat: no-repeat; /* 防止背景图片重复 */
+    background-color: #f4f4f9; /* 背景颜色保持不变 */
     color: #333; /* 文本颜色 */
 }
 
@@ -45,7 +42,7 @@ button:hover {
     margin: 0 auto;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.9); /* 使用透明白色作为背景以便使内容可读 */
+    background: #fff;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
