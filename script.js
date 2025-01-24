@@ -2,65 +2,93 @@ const useProxyCheckbox = document.getElementById('useProxy');
 const releaseListDiv = document.getElementById('releaseList');
 const refreshButton = document.getElementById('refreshButton');
 const githubRepo = 'SRInternet-Studio/PapaAI-Releases'; // 请替换为你的用户名和仓库名
-const githubProxy = 'https://github.site/'; // github 镜像站地址（举例）
-
+const proxyDomains = {
+    original: {
+        site: 'github.com',
+        raw: 'raw.githubusercontent.com',
+        release: 'github.com',
+        git: 'github.com'
+    },
+    proxy: {
+        site: 'github.site', // 镜像站域名
+        raw: 'raw.github.site',
+        release: 'github.store',
+        git: 'github.store'
+    }
+};
 
 let useProxy = false;
 
-async function fetchReleases(useProxyParam) {
-  try {
-      releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>';
-      const apiUrl = `https://api.github.com/repos/${githubRepo}/releases`;
+// 将链接按需求替换为镜像链接
+function convertToProxyLinks(url) {
+    if (useProxy) {
+        // 替换网站链接
+        url = url.replace(proxyDomains.original.site, proxyDomains.proxy.site);
+        // 替换 Raw 链接
+        url = url.replace(proxyDomains.original.raw, proxyDomains.proxy.raw);
+        // 替换 Release 链接
+        url = url.replace(proxyDomains.original.release, proxyDomains.proxy.release);
+        // 替换 Git Clone 链接
+        url = url.replace(proxyDomains.original.git, proxyDomains.proxy.git);
+    }
+    return url;
+}
 
-       const response = await fetch(apiUrl);
-      if(!response.ok) {
-         throw new Error('无法获取 Release 列表, GitHub API 返回错误' + response.statusText);
-      }
-      
-      const releases = await response.json();
+async function fetchReleases() {
+    try {
+        releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>';
+        const apiUrl = `https://api.github.com/repos/${githubRepo}/releases`;
 
-      if (releases.length === 0) {
-          releaseListDiv.innerHTML = '<p>没有找到任何 Release。</p>';
-          return;
-      }
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('无法获取 Release 列表, GitHub API 返回错误: ' + response.statusText);
+        }
 
-      releaseListDiv.innerHTML = ''; // 清空加载提示
-      releases.forEach(release => {
+        const releases = await response.json();
+
+        if (releases.length === 0) {
+            releaseListDiv.innerHTML = '<p>没有找到任何 Release。</p>';
+            return;
+        }
+
+        releaseListDiv.innerHTML = ''; // 清空加载提示
+        releases.forEach(release => {
             const releaseItemDiv = document.createElement('div');
             releaseItemDiv.classList.add('release-item');
+            
             const releaseTitle = document.createElement('h2');
             releaseTitle.textContent = release.name || release.tag_name; // 使用 name 或 tag_name
             releaseItemDiv.appendChild(releaseTitle);
+            
             const releaseBody = document.createElement('p');
             releaseBody.innerHTML = release.body;
             releaseItemDiv.appendChild(releaseBody);
             
             release.assets.forEach(asset => {
-               const assetLink = document.createElement('a');
-               assetLink.href = useProxyParam ? githubProxy + asset.browser_download_url : asset.browser_download_url;
-               assetLink.target = "_blank";
-               assetLink.rel = "noopener noreferrer";
-               assetLink.textContent = `下载: ${asset.name}`;
-               releaseItemDiv.appendChild(assetLink);
+                const assetLink = document.createElement('a');
+                assetLink.href = convertToProxyLinks(asset.browser_download_url);
+                assetLink.target = "_blank";
+                assetLink.rel = "noopener noreferrer";
+                assetLink.textContent = `下载: ${asset.name}`;
+                releaseItemDiv.appendChild(assetLink);
             });
 
-
             releaseListDiv.appendChild(releaseItemDiv);
-      });
+        });
 
-  } catch (error) {
-     console.error("获取 release 列表失败:", error);
-     releaseListDiv.innerHTML = `<p>获取 Release 列表失败: ${error.message}</p>`;
-  }
+    } catch (error) {
+        console.error("获取 release 列表失败:", error);
+        releaseListDiv.innerHTML = `<p>获取 Release 列表失败: ${error.message}</p>`;
+    }
 }
 
 function handleProxyChange() {
     useProxy = useProxyCheckbox.checked;
-    fetchReleases(useProxy);
+    fetchReleases();
 }
 
 // 初始加载
-fetchReleases(useProxy);
+fetchReleases();
 
 // 监听切换
 useProxyCheckbox.addEventListener('change', handleProxyChange);
