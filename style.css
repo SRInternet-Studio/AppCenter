@@ -47,19 +47,33 @@ button:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.release-item {
-    margin-bottom: 15px;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 5px;
-    background: #f9f9f9;
-    transition: all 0.3s;
+/* 按钮容器，确保按钮与下载链接排在同一行 */
+.release-item a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #722bf2; /* 下载链接颜色 */
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-.release-item:hover {
-    background: #f1f1f1;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.release-item a:hover {
+    color: #9626eb; /* 当鼠标悬停下载链接颜色 */
 }
+
+.release-item .btn {
+    display: inline-block;
+    padding: 6px 10px;  /* 调整这里的 padding，使按钮变窄 */
+    margin-left: 10px;
+    background-color: #8A44D4;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.release-item .btn:hover {
+    background-color: #9626eb;
+}
+
 
 .release-item h2 {
     margin: 0;
@@ -81,9 +95,7 @@ button:hover {
     transition: color 0.3s;
 }
 
-.release-item a:hover {
-    color: #9626eb; /* 当鼠标悬停下载链接颜色 */
-}
+
 
 /* 下拉框样式 */
 select {

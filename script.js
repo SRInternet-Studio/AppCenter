@@ -78,71 +78,78 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-// 渲染 Releases 列表
-function renderReleases(releases, repo) {
-    releaseListDiv.innerHTML = ''; // 清空现有内容
-    releases.forEach(release => {
-        const releaseItemDiv = document.createElement('div');
-        releaseItemDiv.classList.add('release-item');
-        
-        const releaseTitle = document.createElement('h2');
-        releaseTitle.textContent = release.name || release.tag_name;
-        releaseItemDiv.appendChild(releaseTitle);
-        
-        const releaseBody = document.createElement('p');
-        releaseBody.innerHTML = converter.makeHtml(release.body);
-        releaseItemDiv.appendChild(releaseBody);
-        
-        release.assets.forEach(asset => {
-            const assetLink = document.createElement('a');
-            assetLink.href = convertToProxyLinks(asset.browser_download_url); // 转换为代理链接
-            assetLink.target = "_blank";
-            assetLink.rel = "noopener noreferrer";
-            assetLink.textContent = `下载: ${asset.name}`;
-            releaseItemDiv.appendChild(assetLink);
+    function renderReleases(releases, repo) {
+        releaseListDiv.innerHTML = ''; // 清空现有内容
+        releases.forEach(release => {
+            const releaseItemDiv = document.createElement('div');
+            releaseItemDiv.classList.add('release-item');
+            
+            const releaseTitle = document.createElement('h2');
+            releaseTitle.textContent = release.name || release.tag_name;
+            releaseItemDiv.appendChild(releaseTitle);
+            
+            const releaseBody = document.createElement('p');
+            releaseBody.innerHTML = converter.makeHtml(release.body);
+            releaseItemDiv.appendChild(releaseBody);
+    
+            // 添加下载资源链接
+            release.assets.forEach(asset => {
+                const assetLink = document.createElement('a');
+                assetLink.href = convertToProxyLinks(asset.browser_download_url); // 转换为代理链接
+                assetLink.target = "_blank";
+                assetLink.rel = "noopener noreferrer";
+                assetLink.textContent = `下载: ${asset.name}`;
+                releaseItemDiv.appendChild(assetLink);
+            });
+    
+            // 创建按钮
+            const viewReleaseButton = document.createElement('a');
+            viewReleaseButton.href = `https://github.com/${repo}/releases/tag/${release.tag_name}`;
+            viewReleaseButton.target = "_blank";
+            viewReleaseButton.rel = "noopener noreferrer";
+            viewReleaseButton.innerText = `查看 Release: ${release.tag_name}`;
+            viewReleaseButton.classList.add('btn');
+    
+            const viewRepoButton = document.createElement('a');
+            viewRepoButton.href = `https://github.com/${repo}`;
+            viewRepoButton.target = "_blank";
+            viewRepoButton.rel = "noopener noreferrer";
+            viewRepoButton.innerText = "查看仓库";
+            viewRepoButton.classList.add('btn');
+    
+            // 按钮容器
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.marginTop = '10px'; // 按钮上方的间距
+            buttonContainer.style.display = 'flex'; // 使用 flex 布局
+            buttonContainer.style.gap = '10px'; // 按钮之间的间距
+    
+            // 按钮添加到容器
+            buttonContainer.appendChild(viewReleaseButton);
+            buttonContainer.appendChild(viewRepoButton);
+    
+            // 添加按钮容器到 releaseItemDiv 的底部
+            releaseItemDiv.appendChild(buttonContainer);
+    
+            releaseListDiv.appendChild(releaseItemDiv);
         });
-
-        releaseListDiv.appendChild(releaseItemDiv);
-    });
-
-    // 添加跳转到 Releases 和仓库的按钮
-    const repoLinkDiv = document.createElement('div');
-    const repoUrl = `https://github.com/${repo}`;
-    const releaseUrl = `${repoUrl}/releases`;
     
-    const viewReleaseButton = document.createElement('a');
-    viewReleaseButton.href = releaseUrl;
-    viewReleaseButton.target = "_blank";
-    viewReleaseButton.innerText = "查看所有 Releases";
-    viewReleaseButton.classList.add('btn');
+        // 添加 "Powered by Songyuhao" 信息
+        const poweredByDiv = document.createElement('div');
+        poweredByDiv.style.textAlign = 'center'; // 居中显示
+        poweredByDiv.style.marginTop = '20px'; // 加上一点上边距
+        const poweredByLink = document.createElement('a');
+        poweredByLink.href = 'https://songyuhao.cn';
+        poweredByLink.target = '_blank'; // 新窗口打开
+        poweredByLink.style.textDecoration = 'none'; // 去掉默认的下划线
+        poweredByLink.style.color = '#333'; // 设置文本颜色
+        poweredByLink.textContent = 'Powered by Songyuhao of SR思锐';
+        
+        poweredByDiv.appendChild(poweredByLink);
+        releaseListDiv.appendChild(poweredByDiv);
+    }
     
-    const viewRepoButton = document.createElement('a');
-    viewRepoButton.href = repoUrl;
-    viewRepoButton.target = "_blank";
-    viewRepoButton.innerText = "查看仓库";
-    viewRepoButton.classList.add('btn');
-
-    repoLinkDiv.appendChild(viewReleaseButton);
-    repoLinkDiv.appendChild(viewRepoButton);
     
-    releaseListDiv.appendChild(repoLinkDiv);
-
-    // 添加 "Powered by Songyuhao" 信息
-    const poweredByDiv = document.createElement('div');
-    poweredByDiv.style.textAlign = 'center'; // 居中显示
-    poweredByDiv.style.marginTop = '20px'; // 加上一点上边距
-    const poweredByLink = document.createElement('a');
-    poweredByLink.href = 'https://songyuhao.cn';
-    poweredByLink.target = '_blank'; // 新窗口打开
-    poweredByLink.style.textDecoration = 'none'; // 去掉默认的下划线
-    poweredByLink.style.color = '#333'; // 设置文本颜色
-    poweredByLink.textContent = 'Powered by Songyuhao of SR思锐';
     
-    poweredByDiv.appendChild(poweredByLink);
-    releaseListDiv.appendChild(poweredByDiv);
-}
-
-
     // 处理仓库选择变化
     async function handleRepoChange() {
         const selectedRepo = repoSelect.value;
@@ -191,4 +198,3 @@ function renderReleases(releases, repo) {
 
     console.log(`页面加载完成`);
 });
-
