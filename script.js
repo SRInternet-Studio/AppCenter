@@ -129,18 +129,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // 处理仓库选择变化
-    function handleRepoChange() {
+    async function handleRepoChange() {
         const selectedRepo = repoSelect.value;
+        
+        // 每次切换仓库时，根据复选框状态选择代理
+        useProxy = useProxyCheckbox.checked;
+        await findBestProxy(); // 重新计算最优代理
         fetchReleases(selectedRepo);
     }
 
     // 刷新列表事件
     async function handleRefreshClick() {
         const selectedRepo = repoSelect.value;
+        
+        // 每次点击刷新时，根据复选框状态选择代理
         useProxy = useProxyCheckbox.checked;
-
-        // 重新计算代理（如果需要）
-        await findBestProxy();
+        await findBestProxy(); // 重新计算最优代理
         
         fetchReleases(selectedRepo);
     }
@@ -165,6 +169,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     refreshButton.addEventListener('click', handleRefreshClick);
     console.log(`已绑定刷新按钮事件监听器`);
+
+    // 为仓库选择下拉框绑定 change 事件
+    repoSelect.addEventListener('change', handleRepoChange);
+    console.log(`已绑定仓库选择事件监听器`);
 
     console.log(`页面加载完成`);
 });
