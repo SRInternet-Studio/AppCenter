@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function fetchReleases(repo) {
         releaseListDiv.innerHTML = '<p>正在加载 Release 列表...</p>'; // 显示加载中
         try {
-            const apiUrl = `https://api.github.com/repos/${repo}/releases`;
+            const apiUrl = `https://appgithub.sr-studio.cn//repos/${repo}/releases`;
 
             const response = await fetch(apiUrl);
             if (!response.ok) {
