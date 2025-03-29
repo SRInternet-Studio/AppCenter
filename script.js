@@ -78,60 +78,92 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function renderReleases(releases, repo) {
-        releaseListDiv.innerHTML = ''; // 清空现有内容
-        releases.forEach(release => {
-            const releaseItemDiv = document.createElement('div');
-            releaseItemDiv.classList.add('release-item');
-            
-            const releaseTitle = document.createElement('h2');
-            releaseTitle.textContent = release.name || release.tag_name;
-            releaseItemDiv.appendChild(releaseTitle);
-            
-            const releaseBody = document.createElement('p');
-            releaseBody.innerHTML = converter.makeHtml(release.body);
-            releaseItemDiv.appendChild(releaseBody);
+function renderReleases(releases, repo) {
+    releaseListDiv.innerHTML = ''; 
+    releases.forEach(release => {
+        const releaseItemDiv = document.createElement('div');
+        releaseItemDiv.classList.add('release-item');
+        
+        // 标题部分
+        const titleRow = document.createElement('div');
+        titleRow.style.display = 'flex';
+        titleRow.style.justifyContent = 'space-between';
+        titleRow.style.alignItems = 'center';
+        
+        const releaseTitle = document.createElement('h2');
+        releaseTitle.textContent = release.name || release.tag_name;
+        releaseTitle.style.color = '#4F1D7A';
+        
+        const tagBadge = document.createElement('span');
+        tagBadge.textContent = release.tag_name;
+        tagBadge.style.background = '#f0e6ff';
+        tagBadge.style.padding = '4px 8px';
+        tagBadge.style.borderRadius = '4px';
+        tagBadge.style.fontSize = '0.9em';
+        
+        titleRow.appendChild(releaseTitle);
+        titleRow.appendChild(tagBadge);
+        releaseItemDiv.appendChild(titleRow);
+        
+        // 内容部分
+        const releaseBody = document.createElement('div');
+        releaseBody.innerHTML = converter.makeHtml(release.body);
+        releaseBody.style.margin = '12px 0';
+        releaseBody.style.color = '#444';
+        releaseItemDiv.appendChild(releaseBody);
     
-            // 添加下载资源链接
-            release.assets.forEach(asset => {
-                const assetLink = document.createElement('a');
-                assetLink.href = convertToProxyLinks(asset.browser_download_url); // 转换为代理链接
-                assetLink.target = "_blank";
-                assetLink.rel = "noopener noreferrer";
-                assetLink.textContent = `下载: ${asset.name}`;
-                releaseItemDiv.appendChild(assetLink);
-            });
-    
-            // 创建按钮
-            const viewReleaseButton = document.createElement('a');
-            viewReleaseButton.href = `https://github.com/${repo}/releases/tag/${release.tag_name}`;
-            viewReleaseButton.target = "_blank";
-            viewReleaseButton.rel = "noopener noreferrer";
-            viewReleaseButton.innerText = `查看 Release: ${release.tag_name}`;
-            viewReleaseButton.classList.add('btn');
-    
-            const viewRepoButton = document.createElement('a');
-            viewRepoButton.href = `https://github.com/${repo}`;
-            viewRepoButton.target = "_blank";
-            viewRepoButton.rel = "noopener noreferrer";
-            viewRepoButton.innerText = "查看仓库";
-            viewRepoButton.classList.add('btn');
-    
-            // 按钮容器
-            const buttonContainer = document.createElement('div');
-            buttonContainer.style.marginTop = '10px'; // 按钮上方的间距
-            buttonContainer.style.display = 'flex'; // 使用 flex 布局
-            buttonContainer.style.gap = '10px'; // 按钮之间的间距
-    
-            // 按钮添加到容器
-            buttonContainer.appendChild(viewReleaseButton);
-            buttonContainer.appendChild(viewRepoButton);
-    
-            // 添加按钮容器到 releaseItemDiv 的底部
-            releaseItemDiv.appendChild(buttonContainer);
-    
-            releaseListDiv.appendChild(releaseItemDiv);
+        // 下载资源链接
+        const downloadGroup = document.createElement('div');
+        downloadGroup.style.display = 'flex';
+        downloadGroup.style.gap = '8px';
+        downloadGroup.style.flexWrap = 'wrap';
+        
+        release.assets.forEach(asset => {
+            const assetLink = document.createElement('a');
+            assetLink.href = convertToProxyLinks(asset.browser_download_url);
+            assetLink.className = 'btn btn-download';
+            assetLink.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                ${asset.name}
+            `;
+            downloadGroup.appendChild(assetLink);
         });
+        releaseItemDiv.appendChild(downloadGroup);
+    
+        // 创建按钮组
+        const buttonGroup = document.createElement('div');
+        buttonGroup.className = 'button-group';
+        
+        const viewReleaseButton = document.createElement('a');
+        viewReleaseButton.className = 'btn btn-release';
+        viewReleaseButton.href = `https://github.com/${repo}/releases/tag/${release.tag_name}`;
+        viewReleaseButton.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12" y2="16"/>
+            </svg>
+            查看 Release
+        `;
+        
+        const viewRepoButton = document.createElement('a');
+        viewRepoButton.className = 'btn btn-repo';
+        viewRepoButton.href = `https://github.com/${repo}`;
+        viewRepoButton.innerHTML = `
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 2048 2048"><path fill="currentColor" d="M1024 1000v959l-64 32l-832-415V536l832-416l832 416v744h-128V680zm-64-736L719 384l621 314l245-122zm-64 1552v-816L256 680v816zM335 576l625 312l238-118l-622-314zm1073 1216v-128h640v128zm0-384h640v128h-640zm-256 640v-128h128v128zm0-512v-128h128v128zm0 256v-128h128v128zm-128 24h1zm384 232v-128h640v128z"/></svg>
+            查看仓库
+        `;
+        
+        buttonGroup.appendChild(viewReleaseButton);
+        buttonGroup.appendChild(viewRepoButton);
+        releaseItemDiv.appendChild(buttonGroup);
+        
+        releaseListDiv.appendChild(releaseItemDiv);
+    });
     
         // 添加 "Powered by Songyuhao" 信息
         const poweredByDiv = document.createElement('div');

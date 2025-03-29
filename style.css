@@ -4,6 +4,7 @@ body {
     padding: 20px;
     background-color: #f4f4f9; /* 背景颜色保持不变 */
     color: #333; /* 文本颜色 */
+    min-width: 320px; /* 防止移动端过度挤压 */
 }
 
 h1 {
@@ -12,8 +13,15 @@ h1 {
 }
 
 .options {
-    margin-bottom: 15px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 0 auto 15px;
+    padding: 10px 0;
+    max-width: 800px;
+    width: 100%;
 }
 
 label {
@@ -47,6 +55,16 @@ button:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.release-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #eaeaea;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 /* 按钮容器，确保按钮与下载链接排在同一行 */
 .release-item a {
     display: inline-block;
@@ -56,8 +74,9 @@ button:hover {
     transition: color 0.3s;
 }
 
-.release-item a:hover {
-    color: #9626eb; /* 当鼠标悬停下载链接颜色 */
+.release-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .release-item .btn {
@@ -136,15 +155,115 @@ label {
 }
 
 .btn {
-    display: inline-block;
-    padding: 8px 12px;
-    margin: 5px;
-    background-color: #8A44D4; /* 新的按钮颜色 */
-    color: white;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.3s;
     text-decoration: none;
-    border-radius: 4px;
+    gap: 8px;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #8A44D4, #6C2AA8);
+    color: white !important;
+}
+
+.btn-release {
+    background: linear-gradient(135deg, #6C2AA8, #4F1D7A);
+    color: white;
+}
+
+.btn-repo {
+    background: linear-gradient(135deg, #4F1D7A, #371356);
+    color: white;
 }
 
 .btn:hover {
-    background-color: #9626eb; /* 悬停时的新颜色 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #8A44D4;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+.proxy-label {
+    position: static; /* 移除绝对定位 */
+    top: auto;
+    white-space: nowrap;
+    color: #666;
+    font-size: 14px;
+}
+
+.proxy-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 10px; /* 增加左右间距 */
+}
+
+@media (max-width: 480px) {
+    .options {
+        gap: 10px;
+    }
+    
+    .proxy-container {
+        order: 1; /* 换行显示 */
+        width: 100%;
+        justify-content: center;
+    }
 }

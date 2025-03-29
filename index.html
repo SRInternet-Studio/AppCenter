@@ -9,26 +9,32 @@
     <script src="showdown.js"></script> <!--Showdown-->
 </head>
 <body>
-    <div class="container">
-        <h1>SR思锐 产品发布页</h1>
-        <div class="options">
-            <label for="repoSelect">选择仓库:</label>
-            <select id="repoSelect">
-                <option value="SRInternet-Studio/PapaAI-Releases">PapaAI</option>
-                <option value="SRInternet-Studio/Wallpaper-generator">壁纸生成器</option>
-                <option value="SRInternet-Studio/Seewo-Custom_Start">希沃定制启动器</option>
-                <option value="SRInternet-Studio/Class_Hot_Search">班级热搜排行榜</option>
-            </select>
-            <label>
-                <input type="checkbox" id="useProxy" checked> 使用最优代理 (GitHub 镜像站)
+<!-- index.html 修改部分 -->
+<div class="container">
+    <h1>SR思锐 产品发布页</h1>
+    <div class="options">
+        <label for="repoSelect">选择仓库:</label>
+        <select id="repoSelect">
+            <option value="SRInternet-Studio/PapaAI-Releases">PapaAI</option>
+            <option value="SRInternet-Studio/Wallpaper-generator">壁纸生成器</option>
+            <option value="SRInternet-Studio/Seewo-Custom_Start">希沃定制启动器</option>
+            <option value="SRInternet-Studio/Class_Hot_Search">班级热搜排行榜</option>
+        </select>
+        <div class="proxy-container"> <!-- 新增容器包裹开关和标签 -->
+            <label class="switch">
+                <input type="checkbox" id="useProxy" checked>
+                <span class="slider"></span>
             </label>
-            <button id="refreshButton">刷新列表</button>
+            <span class="proxy-label">最优代理</span>
         </div>
-
-        <div id="releaseList">
-            <p>正在加载 Release 列表...</p>
-        </div>
+        <button id="refreshButton" class="btn">刷新列表</button>
     </div>
+
+    <div id="releaseList">
+        <p>正在加载 Release 列表...</p>
+    </div>
+</div>
+
 
     <script src="script.js"></script> <!--JavaScript-->
 </body>
